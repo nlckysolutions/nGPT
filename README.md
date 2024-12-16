@@ -17,13 +17,29 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 # Installation
 
 ## Method 1: LM Studio (WINDOWS)
-To begin, please run the following command in a Powershell (WINDOWS ONLY):
+- Download and install LM Studio.
+- In LM Studio, in the search icon section at the bottom left, type in "Meta-Llama-3-8B-Instruct" and hit CTRL+ENTER.
+- Click the first result by LM Studio Community and click download.
+- Go into LM Studio and click the console icon.
+- Click "Load a Model" at the top.
+- Click the model you downloaded (Meta Llama 3 8B Instruct).
+- Use default settings and load the model.
+- Press CTRL+R to start the server.
+- Go back to the GitHub repo, go to Releases, then click on the version of nGPT you wish to install.
+- Download the .py file for Windows.
+- In the folder that you installed nGPT, open a Command Prompt, CD into that folder, and type ```python app.py```.
+- In the Command Prompt window, CTRL+CLICK the first link to be brought to nGPT WebUI.
+- Have fun using Experimental nGPT!
 
-```
-iwr "https://raw.githubusercontent.com/nlckysolutions/nGPT/main/windows-installer.bat" -OutFile "$env:TEMP\wi.bat"; &$env:TEMP\wi.bat
-```
+Whenever you want to use nGPT, you will need to load the model and start the server again:
+- Go into LM Studio and click the console icon.
+- Click "Load a Model" at the top.
+- Click the model you downloaded (Meta Llama 3 8B Instruct).
+- Use default settings and load the model.
+- Press CTRL+R to start the server.
+- Go into the folder you have nGPT in, open a Command Prompt, CD into that folder, and type ```python app.py```.
+- In the Command Prompt window, CTRL+CLICK the first link to be brought to nGPT WebUI.
 
-Afterwards, you should be greeted with the console-based installer, then follow the prompts to install LM Studio, all the required models and data, and nGPT.
 
 **LINUX is currently not supported, however it will be in the future.**
 
