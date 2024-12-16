@@ -31,6 +31,8 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 - In the Command Prompt window, CTRL+CLICK the first link to be brought to nGPT WebUI.
 - Have fun using Experimental nGPT!
 
+**TIP: Make sure to click the save button in the top-right corner to save your current chat. These will be saved locally so they will always be there. nGPT does not autosave.**
+
 Whenever you want to use nGPT, you will need to load the model and start the server again:
 - Go into LM Studio and click the console icon.
 - Click "Load a Model" at the top.
