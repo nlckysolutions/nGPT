@@ -16,6 +16,8 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 
 # Installation
 
+***IT IS STRONGLY AND HIGHLY RECCOMENDED TO HAVE A DEDICATED GPU. OTHERWISE, IT IS NOT ADVISED TO USE nGPT.***
+
 ## Method 1: LM Studio (WINDOWS)
 - Download and install LM Studio.
 - In LM Studio, in the search icon section at the bottom left, type in "Meta-Llama-3-8B-Instruct" and hit CTRL+ENTER.
