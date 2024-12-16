@@ -19,7 +19,9 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 ## Method 1: LM Studio (WINDOWS)
 To begin, please run the following command in a Powershell (WINDOWS ONLY):
 
-```iwr "https://raw.githubusercontent.com/nlckysolutions/nGPT/main/windows-installer.bat" -OutFile "$env:TEMP\wi.bat"; &$env:TEMP\wi.bat```
+```
+iwr "https://raw.githubusercontent.com/nlckysolutions/nGPT/main/windows-installer.bat" -OutFile "$env:TEMP\wi.bat"; &$env:TEMP\wi.bat
+```
 
 Afterwards, you should be greeted with the console-based installer, then follow the prompts to install LM Studio, all the required models and data, and nGPT.
 
