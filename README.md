@@ -16,7 +16,8 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 
 # Installation
 
-***IT IS STRONGLY AND HIGHLY RECCOMENDED TO HAVE A DEDICATED GPU. OTHERWISE, IT IS NOT ADVISED TO USE nGPT.***
+> [!IMPORTANT]
+> ***IT IS STRONGLY AND HIGHLY RECCOMENDED TO HAVE A DEDICATED GPU. OTHERWISE, IT IS NOT ADVISED TO USE nGPT.***
 
 ## Method 1: LM Studio (WINDOWS)
 - Download and install LM Studio.
@@ -33,7 +34,8 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 - In the Command Prompt window, CTRL+CLICK the first link to be brought to nGPT WebUI.
 - Have fun using Experimental nGPT!
 
-**TIP: Make sure to click the save button in the top-right corner to save your current chat. These will be saved locally so they will always be there. nGPT does not autosave.**
+> [!TIP]
+> Make sure to click the save button in the top-right corner to save your current chat. These will be saved locally so they will always be there. nGPT does not autosave.**
 
 Whenever you want to use nGPT, you will need to load the model and start the server again:
 - Go into LM Studio and click the console icon.
@@ -44,7 +46,7 @@ Whenever you want to use nGPT, you will need to load the model and start the ser
 - Go into the folder you have nGPT in, open a Command Prompt, CD into that folder, and type ```python app.py```.
 - In the Command Prompt window, CTRL+CLICK the first link to be brought to nGPT WebUI.
 
-
-**LINUX is currently not supported, however it will be in the future.**
-
-**I do NOT and will NOT support MacOS. This is mostly due to Apple's prices, ecosystem, and locking down devices with "Activation Lock", as well as doing many other money-generating practices which other companies unfortunately follow. In order to combat this, I do not want to make anything available for their product(s) as a sort of 'strike.' If you would like to test nGPT on MacOS, please run Windows or Linux with Parallels or another VM program.**
+> [!NOTE]
+> **LINUX is currently not supported, however it will be in the future.**
+>
+> **I do NOT and will NOT support MacOS. This is mostly due to Apple's prices, ecosystem, and locking down devices with "Activation Lock", as well as doing many other money-generating practices which other companies unfortunately follow. In order to combat this, I do not want to make anything available for their product(s) as a sort of 'strike.' If you would like to test nGPT on MacOS, please run Windows or Linux with Parallels or another VM program.**
