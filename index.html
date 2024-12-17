@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>nGPT 2M Chat Interface</title>
+    <style>
+        body {
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f0f2f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            width: 300px;
+            background: #3f3f46;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #4b5563;
+        }
+
+        #sidebar-header {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 1px solid #4b5563;
+            background: #4b5563;
+        }
+
+        #chat-list {
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        #chat-list li {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #4b5563;
+            transition: background 0.2s;
+        }
+		
+		.system {
+			display: none;
+		}
+		
+        #chat-list li:hover {
+            background: #6b7280;
+        }
+
+        /* Main area */
+        #main {
+            flex: 1; 
+            display: flex; 
+            flex-direction: column;
+            background: #fff;
+        }
+
+        /* Header */
+        #header {
+            padding: 15px 20px;
+            background: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        #header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        #save-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #333;
+        }
+
+        #save-btn:hover {
+            color: #1f2937;
+        }
+
+        /* Messages */
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            line-height: 1.5;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: #4f46e5;
+            color: #fff;
+            border-bottom-right-radius: 0;
+        }
+
+        .assistant {
+            align-self: flex-start;
+            background: #e5e7eb;
+            color: #333;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Input area */
+        #input-area {
+            border-top: 1px solid #e5e7eb;
+            padding: 15px 20px;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+        }
+
+        #input {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            padding: 10px 15px;
+            border-radius: 9999px;
+            outline: none;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        #input:focus {
+            border-color: #4f46e5;
+        }
+
+        #send-btn, #stop-btn {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        #send-btn:hover, #stop-btn:hover {
+            background: #4338ca;
+        }
+
+        #stop-btn {
+            background: #ef4444;
+        }
+
+        #stop-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Scrollbar styling */
+        #messages::-webkit-scrollbar, #chat-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        #messages::-webkit-scrollbar-thumb, #chat-list::-webkit-scrollbar-thumb {
+            background: #a1a1aa;
+            border-radius: 4px;
+        }
+        #messages::-webkit-scrollbar-track, #chat-list::-webkit-scrollbar-track {
+            background: #f0f2f5;
+        }
+
+        /* Save chat modal */
+        #save-modal {
+            position: fixed;
+            top: 0; left: 0; right:0; bottom:0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items:center;
+            justify-content:center;
+            z-index: 1000;
+        }
+
+        #save-modal-content {
+            background:#fff;
+            padding:30px;
+            border-radius:10px;
+            text-align:center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        #modal-input {
+            width: 80%;
+            padding:12px;
+            margin:15px 0;
+            border:1px solid #d1d5db;
+            border-radius:8px;
+            font-size: 1rem;
+        }
+
+        #modal-save-btn, #modal-cancel-btn {
+            padding:10px 20px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            margin: 10px;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        #modal-save-btn {
+            background:#4f46e5;
+            color:#fff;
+        }
+
+        #modal-save-btn:hover {
+            background:#4338ca;
+        }
+
+        #modal-cancel-btn {
+            background:#d1d5db;
+            color:#333;
+        }
+
+        #modal-cancel-btn:hover {
+            background:#a1a1aa;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div id="sidebar-header">Saved Chats</div>
+        <ul id="chat-list"></ul>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div id="main">
+        <div id="header">
+            <h1>nGPT 2M Chat</h1>
+            <button id="save-btn" title="Save Chat"><span role="img" aria-label="Save">💾</span></button>
+        </div>
+
+        <div id="messages"></div>
+
+        <div id="input-area">
+            <input type="text" id="input" placeholder="Type a message..." autocomplete="off">
+            <button id="send-btn">Send</button>
+            <button id="stop-btn" style="display:none;" title="Stop Generation">⏹️</button>
+        </div>
+    </div>
+
+    <!-- Save Chat Modal -->
+    <div id="save-modal">
+        <div id="save-modal-content">
+            <h2>Save Current Chat</h2>
+            <input type="text" id="modal-input" placeholder="Enter chat name">
+            <br>
+            <button id="modal-save-btn">Save</button>
+            <button id="modal-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('send-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const messagesDiv = document.getElementById('messages');
+        const saveBtn = document.getElementById('save-btn');
+        const saveModal = document.getElementById('save-modal');
+        const modalInput = document.getElementById('modal-input');
+        const modalSaveBtn = document.getElementById('modal-save-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const chatList = document.getElementById('chat-list');
+
+        let currentAssistantMessageElement = null;
+        let controller = null;
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') sendMessage();
+        });
+
+        stopBtn.addEventListener('click', stopGeneration);
+
+        saveBtn.addEventListener('click', () => {
+            modalInput.value = "";
+            saveModal.style.display = 'flex';
+            modalInput.focus();
+        });
+
+        modalSaveBtn.addEventListener('click', saveChat);
+        modalCancelBtn.addEventListener('click', () => {
+            saveModal.style.display = 'none';
+        });
+
+        async function sendMessage() {
+            const message = input.value.trim();
+            if(!message) return;
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Disable send, show stop
+            sendBtn.style.display = 'none';
+            stopBtn.style.display = 'inline-block';
+
+            // Initialize AbortController to handle stop
+            controller = new AbortController();
+            const signal = controller.signal;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: message }),
+                    signal: signal
+                });
+
+                if (!response.ok) {
+                    addMessage(`Error: ${response.status}`, 'assistant');
+                    resetButtons();
+                    return;
+                }
+
+                // Create a new message element for assistant
+                currentAssistantMessageElement = addMessage("", 'assistant');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let done = false;
+
+                while (!done) {
+                    const { value, done: doneReading } = await reader.read();
+                    if (doneReading) {
+                        done = true;
+                        break;
+                    }
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    currentAssistantMessageElement.textContent += chunk;
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
+
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    addMessage("AI generation stopped.", 'assistant');
+                } else {
+                    addMessage(`Error: ${error.message}`, 'assistant');
+                }
+            }
+
+            resetButtons();
+        }
+
+        function addMessage(text, role) {
+            const msg = document.createElement('div');
+            msg.className = `message ${role}`;
+            msg.textContent = text;
+            messagesDiv.appendChild(msg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return msg;
+        }
+
+        async function stopGeneration() {
+            if (controller) {
+                controller.abort();
+            }
+            // Send stop request to backend
+            await fetch('http://127.0.0.1:5000/stop', { method: 'POST' });
+            resetButtons();
+        }
+
+        function resetButtons() {
+            sendBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
+        }
+
+        async function fetchChats() {
+            const response = await fetch('http://127.0.0.1:5000/get_saved_chats');
+            if (!response.ok) return;
+            const savedChats = await response.json();
+            chatList.innerHTML = '';
+            savedChats.forEach(c => {
+                const li = document.createElement('li');
+                li.textContent = c.name;
+                li.addEventListener('click', () => loadChat(c.name));
+                chatList.appendChild(li);
+            });
+        }
+
+        async function loadChat(name) {
+            const response = await fetch(`http://127.0.0.1:5000/load_chat?name=${encodeURIComponent(name)}`);
+            if (!response.ok) return;
+            const chatData = await response.json();
+            messagesDiv.innerHTML = '';
+            chatData.messages.forEach(m => addMessage(m.content, m.role));
+        }
+
+        async function saveChat() {
+            const chatName = modalInput.value.trim();
+            if (!chatName) {
+                alert('Please enter a chat name.');
+                return;
+            }
+
+            const response = await fetch('http://127.0.0.1:5000/save_chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: chatName })
+            });
+
+            if (response.ok) {
+                await fetchChats();
+                saveModal.style.display = 'none';
+            } else {
+                alert('Failed to save chat.');
+            }
+        }
+
+        // On load, fetch the chats list
+        fetchChats();
+    </script>
+</body>
+</html>
