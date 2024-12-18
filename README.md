@@ -8,11 +8,12 @@ nGPT was created for a few reasons:
 
 # Features
 
-As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current features:
-1. A nice, web hosted Flask Python UI.
-2. The ability to search the web.
-3. The ability to generate songs (via DeepAI and Selenium + Undetected Chromedriver).
-4. The ability to turn on/off your WIZ smart lights with no additional setup required.
+As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current features (without checkmarks = buggy or in progress):
+- [x] A nice, web hosted Flask Python UI.
+- [x] The ability to generate songs (via DeepAI and Selenium + Undetected Chromedriver).
+- [x] The ability to turn on/off your WIZ smart lights with no additional setup required.
+- [ ] List devices on Wi-Fi and Bluetooth
+- [ ] The ability to search the web.
 
 # Installation
 
