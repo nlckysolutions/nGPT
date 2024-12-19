@@ -1,5 +1,8 @@
 # nGPT
 A simple, powerful, local, and open source AI.
+
+**PLEASE USE ONLY THE LATEST VERSION. OLDER VERSIONS *CANNOT* HAVE ANY BUGS FIXED OR CHANGES.**
+
 # About
 nGPT was created for a few reasons:
 1. Companies like OpenAI are trying to make it harder to run AI locally.
