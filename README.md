@@ -23,6 +23,8 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 ## Method 1: LM Studio (WINDOWS)
 - Download and install LM Studio.
 - In LM Studio, in the search icon section at the bottom left, type in "Meta-Llama-3-8B-Instruct" and hit CTRL+ENTER.
+> [!NOTE]
+> While nGPT can theoretically work with any model, Meta Llama 3 8B Instruct seems to work the best.
 - Click the first result by LM Studio Community and click download.
 - Go into LM Studio and click the console icon.
 - Click "Load a Model" at the top.
