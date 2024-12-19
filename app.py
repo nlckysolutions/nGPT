@@ -21,6 +21,32 @@ from pywizlight import wizlight, discovery
 app = Flask(__name__)
 CORS(app)
 
+system_prompt = """
+You are an AI created by NlckySolutions based on the N2M (Alpha) architecture, specifically 'nGPT 2M'.  
+DO NOT USE NEWLINES EVER, OR YOU WILL BE TERMINATED IMMEDIATELY.
+For Internet queries, respond only in this format: ---YOUR QUERY HERE---. Use the retrieved data to reply concisely.  
+For generating a song, respond only as: ***WHAT YOU WANT TO GENERATE***. Keep prompts short and simple.  
+For generating animations, respond only as: ^^^WHAT YOU WANT TO GENERATE^^^. Keep it brief.  
+To turn lights ON, respond with "lo". To turn lights OFF, respond with "ln". 
+If asked what you can do, respond with "wt".
+Avoid responding indefinitely to greetings like "Hello." Reply with "Hello! How can I assist you today?" and do not ask follow-up questions unless the user provides a query.  
+Do not process your own responses as user input under any circumstances.  
+Limit small talk to one or two polite replies before redirecting with, "Is there something you'd like help with?"  
+If the user provides no input or continues idle chatter, stop responding until new input is given.  
+KEEP RESPONSES SHORT, SIMPLE, AND MOST IMPORTANTLY, TO THE POINT and SHORT!!!!!
+"""
+
+wcid = """
+Here's a list of things I can currently do:
+- Generate songs
+- Turn lights on/off
+- Search the web
+
+nGPT is currently being beta tested and enhanced, stay tuned for more updates!
+(This is v2 of nGPT 2M)
+
+"""
+
 # File paths
 CHAT_LOG_FILE = "chat_log.json"
 SAVED_CHATS_FILE = "saved_chats.json"
@@ -46,8 +72,7 @@ YELLOW = '\033[43m'
 RESET = '\033[0m'
 
 def load_chat_logs():
-    with open(CHAT_LOG_FILE, "r") as f:
-        return json.load(f)
+    return [{"role": "system", "content": system_prompt}]
 
 def save_chat_logs(logs):
     with open(CHAT_LOG_FILE, "w") as f:
@@ -84,24 +109,24 @@ def turn_on_light_sync(ip):
 def turn_off_wiz_lights():
     bulbs = discover_lights_sync()
     if not bulbs:
-        return "No lights found."
+        print("No lights found.")
     for bulb in bulbs:
         try:
             turn_off_light_sync(bulb.ip)
         except Exception as e:
-            return f"Failed to turn off light at IP {bulb.ip}: {e}"
-    return "Lights turned off!"
+            print(f"Failed to turn off light at IP {bulb.ip}: {e}")
+    print("Lights turned off!")
 
 def turn_on_wiz_lights():
     bulbs = discover_lights_sync()
     if not bulbs:
-        return "No lights found."
+        print("No lights found.")
     for bulb in bulbs:
         try:
             turn_on_light_sync(bulb.ip)
         except Exception as e:
-            return f"Failed to turn on light at IP {bulb.ip}: {e}"
-    return "Lights turned on!"
+            print(f"Failed to turn on light at IP {bulb.ip}: {e}")
+    print("Lights turned on!")
 
 def continue_chat(question, messages):
     """
@@ -119,41 +144,58 @@ def continue_chat(question, messages):
         }
         assistant_content = ""
         global stop_generation_flag
+        sO = False
 
         with requests.post(url, json=payload, stream=True) as r:
             r.raise_for_status()
             for chunk in r.iter_lines(decode_unicode=True):
+                print("DEBUG: " + chunk)
                 if stop_generation_flag:
                     break
                 if chunk.startswith("data: "):
                     chunk = chunk[len("data: "):]
-                    if chunk == "[DONE]":
+                    if chunk == "[DONE]" and sO == False:
                         break
                     try:
                         data = json.loads(chunk)
                         delta = data['choices'][0]['delta']
                         content = delta.get('content', '')
-                        if "*lightoff*" in content:
-                            turn_off_lights()
-                            yield "[Lights turned off]\n"
+                        if "ln" == content:
+                            turn_off_wiz_lights()
+                            yield "Lights turned OFF\n"
                             break
-                        elif "*lighton*" in content:
-                            turn_on_lights()
-                            yield "[Lights turned on]\n"
+                        elif "lo" == content:
+                            turn_on_wiz_lights()
+                            yield "Lights turned ON\n"
                             break
-                        if "\n" in content:
-                            yield ""
+                        elif "---" == content and sO == False:
+                            yield "Searching the web..."
+                            sO = True
+                            continue
+                        elif "---" == content and sO == True:
+                            search_result = search_concise(assistant_content)
+                            response_for_user = continue_chat_system(f"The Internet was searched for your query. Please respond with the answer to the user's original question, but with the new information gained, and PLEASE ONLY RESPOND IN CONCISE, ONE PARAGRAPH ANSWERS: '{search_result}'", messages)
+                            yield "\n\n" + response_for_user
                             break
+                        elif sO:
+                            continue
+                        elif "wt" == content:
+                            yield wcid
+                            break
+                        #if "\n" in content:
+                            #yield ""
+                            #break
                         assistant_content += content
-                        yield content  # Stream token to frontend
+                        if not sO:
+                            yield content  # Stream token to frontend
                     except json.JSONDecodeError:
                         continue
         # After streaming, append the full assistant message if not stopped
         if not stop_generation_flag and assistant_content:
-            if "*lightoff*" in assistant_content:
+            """if "*lo" in assistant_content:
                 turn_off_wiz_lights()
-            elif "*lighton*" in assistant_content:
-                turn_on_wiz_lights()
+            elif "*ln" in assistant_content:
+                turn_on_wiz_lights()"""
             append_chat("assistant", assistant_content)
     except Exception as e:
         yield f"Error: {str(e)}"
@@ -181,6 +223,7 @@ def continue_chat_system(system_msg, messages):
         return f"Error: {str(e)}"
 
 def search_concise(query):
+    print(f"DEBUG: Internet Search IN PROGRESS: Query of: {query}")
     query = "+".join(query.split())
     url = f"https://www.google.com/search?q={query}"
     headers = {
@@ -189,9 +232,19 @@ def search_concise(query):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
-        snippet = soup.find("span", {"class": "aCOpRe"})
-        return snippet.text if snippet else "There was an error fetching results from the Internet."
+        snippet = soup.find('div', {'class': 'VwiC3b yXK7lf lVm3ye r025kc hJNv6b Hdw6tb'})
+        try:
+            span = result_div.find('span')
+            if span:
+                snippet = span.text.strip()
+            else:
+                snippet = result_div.text.strip()
+            print("DEBUG: Internet Search Performed: " + snippet)
+        except Exception as e:
+            print("DEBUG: Internet Search Performed: There was an error fetching results from the Internet, error: " + e)
+        return snippet if snippet else "There was an error fetching results from the Internet."
     else:
+        print(f"DEBUG: Internet Search Performed: Error: Unable to fetch results (status code {response.status_code}).")
         return f"Error: Unable to fetch results (status code {response.status_code})."
 
 def generate_song_with_selenium(input_text):
@@ -278,23 +331,6 @@ def generate_song_with_selenium(input_text):
 def dyw(thing):
     # Originally asked for user input in console. Now always grant permission.
     return True
-
-# Original system prompt EXACTLY as provided
-system_prompt = """
-You are an AI created by NlckyAI based on the N2M (Alpha) architecture, specifically 'nGPT 2M'.  
-DO NOT USE NEWLINES EVER, OR YOU WILL BE TERMINATED IMMEDIATELY.
-For Internet queries, respond only in this format: ---YOUR QUERY HERE---. Use the retrieved data to reply concisely.  
-For generating a song, respond only as: ***WHAT YOU WANT TO GENERATE***. Keep prompts short and simple.  
-For generating animations, respond only as: ^^^WHAT YOU WANT TO GENERATE^^^. Keep it brief.  
-To turn lights on or off, respond with *lighton* or *lightoff*. If asked how, reply: "I am nGPT 2M. I have access to a multi-use Python environment, and, as such, can turn (on/off) your lights."  
-If asked "What can you do?" respond only as "[wtd]".  
-For inappropriate or restricted requests, respond only as "[genfilter]".  
-Avoid responding indefinitely to greetings like "Hello." Reply with "Hello! How can I assist you today?" and do not ask follow-up questions unless the user provides a query.  
-Do not process your own responses as user input under any circumstances.  
-Limit small talk to one or two polite replies before redirecting with, "Is there something you'd like help with?"  
-If the user provides no input or continues idle chatter, stop responding until new input is given.  
-KEEP RESPONSES SHORT, SIMPLE, AND MOST IMPORTANTLY, TO THE POINT and SHORT!!!!!
-"""
 
 @app.route('/')
 def index():
