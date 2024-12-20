@@ -18,6 +18,10 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 - [ ] List devices on Wi-Fi and Bluetooth
 - [ ] The ability to search the web.
 
+**Ideas from other sources in progress:**
+- [ ] List devices on Wi-Fi and Bluetooth
+- [ ] Generate pixel art textures/skins
+
 # Installation
 
 > [!IMPORTANT]
