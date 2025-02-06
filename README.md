@@ -1,7 +1,7 @@
 # nGPT
 A simple, powerful, local, and open source AI.
 
-**PLEASE USE ONLY THE LATEST VERSION. OLDER VERSIONS *CANNOT* HAVE ANY BUGS FIXED OR CHANGES.**
+[![🏆 Winner - National Top App (Feb 2025)](https://img.shields.io/badge/🏆%20Winner-National%20Top%20App%20(Feb%202025)-gold?style=for-the-badge&labelColor=black)](https://www.thecoderschool.com/)
 
 # About
 nGPT was created for a few reasons:
