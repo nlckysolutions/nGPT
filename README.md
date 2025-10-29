@@ -1,8 +1,6 @@
 # nGPT
 A simple, powerful, local, and open source AI.
 
-[![🏆 Winner - National Top App (Feb 2025)](https://img.shields.io/badge/🏆%20Winner-National%20Top%20App%20(Feb%202025)-gold?style=for-the-badge&labelColor=black)](https://web.archive.org/web/20250208161753/https://www.thecoderschool.com/#philosophyBG)
-
 # About
 nGPT was created for a few reasons:
 1. Companies like OpenAI are trying to make it harder to run AI locally.
