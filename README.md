@@ -3,7 +3,7 @@ A simple, powerful, local, and open source AI.
 
 # About
 nGPT was created for a few reasons:
-1. Companies like OpenAI are trying to make it harder to run AI locally.
+1. Companies like OpenAI are trying to make it harder to run AI locally. (among many, many, many other bad things)
 2. There wasn't really an easy way to have an AI do more things besides a few simple ones
 3. I want more people to have access to a simple, open-source, local AI that can do many things.
 
@@ -17,19 +17,18 @@ As of now, the latest publicly-available model of nGPT (nGPT 2M) has the current
 - [ ] The ability to search the web.
 
 **Ideas from other sources in progress:**
-- [ ] List devices on Wi-Fi and Bluetooth
 - [ ] Generate pixel art textures/skins
 
 # Installation
 
 > [!IMPORTANT]
-> ***IT IS STRONGLY AND HIGHLY RECOMMENDED TO HAVE A DEDICATED GPU. OTHERWISE, IT IS NOT ADVISED TO USE nGPT.***
+> ***IT IS STRONGLY RECOMMENDED TO HAVE A DEDICATED GPU. OTHERWISE, IT IS NOT ADVISED TO USE nGPT.***
 
 ## Method 1: LM Studio (WINDOWS)
 - Download and install LM Studio.
 - In LM Studio, in the search icon section at the bottom left, type in "Meta-Llama-3-8B-Instruct" and hit CTRL+ENTER.
 > [!NOTE]
-> While nGPT can theoretically work with any model, Meta Llama 3 8B Instruct seems to work the best.
+> While nGPT can theoretically work with any model, Meta Llama 3 8B Instruct seems to work the best. (you can choose any model, though. I encourage experimenting with different models!)
 - Click the first result by LM Studio Community and click download.
 - Go into LM Studio and click the console icon.
 - Click "Load a Model" at the top.
@@ -56,5 +55,3 @@ Whenever you want to use nGPT, you will need to load the model and start the ser
 
 > [!NOTE]
 > **LINUX is currently not supported, however it will be in the future.**
->
-> **I do NOT and will NOT support MacOS. This is mostly due to Apple's prices, ecosystem, and locking down devices with "Activation Lock", as well as doing many other money-generating practices which other companies unfortunately follow. In order to combat this, I do not want to make anything available for their product(s) as a sort of 'strike.' If you would like to test nGPT on MacOS, please run Windows or Linux with Parallels or another VM program.**
